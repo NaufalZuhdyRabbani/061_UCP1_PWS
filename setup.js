@@ -46,10 +46,26 @@ connection.connect((err) => {
       connection.query(createTableQuery, (err, results) => {
         if (err) {
           console.error('Error creating table:', err);
-        } else {
-          console.log('Tabel buku berhasil dibuat.');
+          connection.end();
+          return;
         }
-        connection.end();
+        console.log('Tabel buku berhasil dibuat.');
+
+        // Insert data dummy
+        const insertDataQuery = `
+          INSERT INTO buku (judul, pengarang, tahun_terbit, bidang) VALUES
+          ('Pemrograman JavaScript', 'John Doe', '2020', 'Teknologi'),
+          ('Sejarah Indonesia', 'Jane Smith', '2018', 'Sejarah'),
+          ('Matematika Dasar', 'Bob Johnson', '2019', 'Matematika')
+        `;
+        connection.query(insertDataQuery, (err, results) => {
+          if (err) {
+            console.error('Error inserting data:', err);
+          } else {
+            console.log('Data dummy berhasil ditambahkan.');
+          }
+          connection.end();
+        });
       });
     });
   });
